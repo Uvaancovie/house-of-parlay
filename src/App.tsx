@@ -34,6 +34,100 @@ export default function App() {
     }
   }, [products, previewProduct]);
 
+  useEffect(() => {
+    const siteTitle = 'House of Parlay — ZAR Luxury Jewellery Catalogue';
+    const siteDescription = 'Explore House of Parlay luxury jewellery in South African Rand with curated product details, private inquiries, and atelier registration.';
+    const productDescription = spotlightProduct
+      ? `${spotlightProduct.title} in the ${spotlightProduct.collection} collection. ${spotlightProduct.subtitleTagline || 'DETAILS HIDDEN. EXCELLENCE REVEALED.'} ${spotlightProduct.description}`
+      : siteDescription;
+    const title = spotlightProduct ? `${spotlightProduct.title} — House of Parlay` : siteTitle;
+    const canonical = `${window.location.origin}${window.location.pathname}`;
+
+    const setMeta = (selector: string, value: string, attr: 'name' | 'property' = 'name') => {
+      let el = document.head.querySelector<HTMLMetaElement>(`meta[${attr}="${selector}"]`);
+      if (!el) {
+        el = document.createElement('meta');
+        el.setAttribute(attr, selector);
+        document.head.appendChild(el);
+      }
+      el.setAttribute('content', value);
+    };
+
+    document.title = title;
+    setMeta('description', productDescription);
+    setMeta('robots', 'index,follow');
+    setMeta('theme-color', '#1a1a1a');
+    setMeta('og:title', title, 'property');
+    setMeta('og:description', productDescription, 'property');
+    setMeta('og:type', spotlightProduct ? 'product' : 'website', 'property');
+    setMeta('og:url', canonical, 'property');
+    setMeta('og:site_name', 'House of Parlay', 'property');
+    setMeta('twitter:card', 'summary_large_image');
+    setMeta('twitter:title', title);
+    setMeta('twitter:description', productDescription);
+    if (spotlightProduct) {
+      setMeta('og:image', spotlightProduct.primaryImage, 'property');
+      setMeta('twitter:image', spotlightProduct.primaryImage);
+    }
+
+    let canonicalLink = document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]');
+    if (!canonicalLink) {
+      canonicalLink = document.createElement('link');
+      canonicalLink.rel = 'canonical';
+      document.head.appendChild(canonicalLink);
+    }
+    canonicalLink.href = canonical;
+
+    const scriptId = 'house-of-parlay-jsonld';
+    let schema = document.getElementById(scriptId);
+    if (schema) schema.remove();
+
+    const graph: any[] = [
+      {
+        '@context': 'https://schema.org',
+        '@type': 'WebSite',
+        name: 'House of Parlay',
+        url: canonical,
+        description: siteDescription,
+      },
+      {
+        '@type': 'Organization',
+        name: 'House of Parlay',
+        url: canonical,
+        logo: spotlightProduct?.primaryImage || undefined,
+      },
+    ];
+
+    if (spotlightProduct) {
+      graph.push({
+        '@type': 'Product',
+        name: spotlightProduct.title,
+        description: productDescription,
+        image: spotlightProduct.primaryImage,
+        sku: spotlightProduct.sku,
+        category: spotlightProduct.category,
+        brand: { '@type': 'Brand', name: 'House of Parlay' },
+        offers: {
+          '@type': 'Offer',
+          priceCurrency: 'ZAR',
+          price: spotlightProduct.price,
+          availability: 'https://schema.org/InStock',
+          url: canonical,
+        },
+      });
+    }
+
+    const jsonLd = document.createElement('script');
+    jsonLd.id = scriptId;
+    jsonLd.type = 'application/ld+json';
+    jsonLd.textContent = JSON.stringify({ '@context': 'https://schema.org', '@graph': graph });
+    document.head.appendChild(jsonLd);
+
+    return () => {
+      jsonLd.remove();
+    };
+  }, [spotlightProduct]);
+
   const triggerToast = (msg: string) => {
     setToastMessage(msg);
     setTimeout(() => {
