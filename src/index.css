@@ -1,0 +1,70 @@
+@import "tailwindcss";
+
+@layer utilities {
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  .animate-fade-in {
+    animation: fade-in-up 0.35s ease-out both;
+  }
+
+  .font-serif-artistic {
+    font-family: 'Cormorant Garamond', 'Georgia', serif;
+  }
+  .font-cinzel {
+    font-family: 'Cinzel', 'Trajan Pro', serif;
+  }
+  .font-sans-artistic {
+    font-family: 'Montserrat', -apple-system, sans-serif;
+  }
+  
+  .bg-editorial-ivory {
+    background-color: #f8f7f4;
+  }
+
+  .text-editorial-dark {
+    color: #1a1a1a;
+  }
+
+  .border-editorial {
+    border-color: rgba(26, 26, 26, 0.1);
+  }
+
+  .bg-gold-gradient {
+    background: linear-gradient(135deg, #2a2a2a 0%, #1a1a1a 100%);
+  }
+
+  .text-gold-gradient {
+    color: #1a1a1a;
+  }
+}
+
+/* Custom editorial scrollbar */
+::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+::-webkit-scrollbar-track {
+  background: #f8f7f4;
+}
+::-webkit-scrollbar-thumb {
+  background: #dcd8d0;
+  border-radius: 2px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #1a1a1a;
+}
+
+body {
+  font-family: 'Georgia', serif;
+  background-color: #f8f7f4;
+  color: #1a1a1a;
+  min-height: 100vh;
+}

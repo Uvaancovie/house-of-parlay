@@ -1,0 +1,6 @@
+{
+  "name": "House of Parlay - Product Upload & Catalog Management",
+  "description": "Luxury product catalog management and admin upload system for House of Parlay jewellery.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
